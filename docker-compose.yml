@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # This is the PostgreSQL database service.
+  # It will be accessible by other services using the hostname 'database'.
+  database:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=recipes_db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # The User Data Service stores user ingredients and history.
+  user-data-service:
+    build:
+      context: ./userdata
+    container_name: user-data-service
+    ports:
+      - "8081:8081"
+    environment:
+      # Use the 'database' hostname defined in this file.
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/recipes_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - database
+    restart: on-failure
+
+
+  # The Suggestion Service uses the Bedrock API.
+  suggestion-service:
+    build:
+      context: ./suggest
+    container_name: suggestion-service
+    ports:
+      - "8083:8083"
+    environment:
+      # AWS credentials for Bedrock.
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_REGION=us-east-1
+    restart: on-failure
+
+  # The API Gateway routes all requests.
+  api-gateway:
+    build:
+      context: ./apigate
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    # This gateway doesn't need to connect to the database directly,
+    # but it needs to communicate with the other services.
+    depends_on:
+      - user-data-service
+      - suggestion-service
+    restart: on-failure
+
+volumes:
+  postgres-data:
+
