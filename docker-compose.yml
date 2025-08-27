@@ -60,6 +60,18 @@ services:
       - suggestion-service
     restart: on-failure
 
+  # React Frontend (Nginx)
+  frontend:
+    build:
+      context: ./smart-recipe-frontend
+    container_name: frontend
+    depends_on:
+      - api-gateway
+    ports:
+      - "3000:80"
+    environment:
+      REACT_APP_API_BASE: http://api-gateway:8080  # uses service name
+
 volumes:
   postgres-data:
 

@@ -40,6 +40,7 @@ button {
   padding: 8px 12px;
   border: none;
   border-radius: 5px;
+  margin-left: 5px;
   cursor: pointer;
 }
 

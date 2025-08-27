@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'http://52.23.205.235:8080';
+const API_BASE = 'http://34.228.16.196:8080';  //process.env.REACT_APP_API_BASE;   // 'http://34.228.16.196:8080';
 
 export default function SmartRecipeApp() {
   const [ingredients, setIngredients] = useState(['']);
