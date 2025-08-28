@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment-userdata
+  labels:
+    app: backend-userdata
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-userdata
+  template:
+    metadata:
+      labels:
+        app: backend-userdata
+    spec:
+      containers:
+      - name: backend-userdata
+        image: akshat1414/userdata:v2
+        ports:
+        - containerPort: 8081
+        env:
+        - name: POSTGRES_DB
+          value: "postgres"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_HOST
+          value: "postgres-service"
