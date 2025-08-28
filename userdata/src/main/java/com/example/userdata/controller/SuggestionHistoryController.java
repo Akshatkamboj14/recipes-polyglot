@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/history")
+@RequestMapping("/api/history")
 public class SuggestionHistoryController {
 
     private final SuggestionHistoryService service;
