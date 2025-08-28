@@ -3,7 +3,7 @@ package com.example.suggest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/claude")
+@RequestMapping("/api/claude")
 public class ClaudeController {
 
     private final ClaudeService claudeService;
