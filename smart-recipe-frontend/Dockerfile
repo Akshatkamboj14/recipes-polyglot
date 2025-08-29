@@ -24,4 +24,5 @@ RUN chown -R appuser:www /usr/share/nginx/html
 USER appuser
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx"]
+CMD ["-g", "daemon off;"]

@@ -5,7 +5,7 @@ COPY mvnw pom.xml ./
 COPY .mvn .mvn
 RUN ./mvnw dependency:go-offline
 COPY src src
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package
 
 # Stage 2: Runtime
 FROM openjdk:17-jdk-alpine AS runtime
