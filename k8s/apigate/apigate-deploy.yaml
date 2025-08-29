@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment-apigate
+  labels:
+    app: backend-apigate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-apigate
+  template:
+    metadata:
+      labels:
+        app: backend-apigate
+    spec:
+      containers:
+      - name: backend-apigate
+        image: akshat1414/apigate:v4
+        ports:
+        - containerPort: 8080
