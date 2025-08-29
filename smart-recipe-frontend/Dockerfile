@@ -9,20 +9,18 @@ RUN npm run build
 
 # Stage 2: Serve with Nginx
 FROM nginx:stable-alpine
-RUN addgroup -S www && adduser -D -g www appuser
+WORKDIR /usr/share/nginx/html
 
-# Copy your custom nginx.conf
+# Create non-root user & group, copy build output, fix ownership in one layer
+RUN addgroup -S www && adduser -D -G www appuser && \
+    rm -rf ./* && \
+    mkdir -p /var/cache/nginx /var/run /var/log/nginx && \
+    chown -R appuser:www /usr/share/nginx/html /var/cache/nginx /var/run /var/log/nginx
+
+# Copy nginx.conf (overwrites default) & React build
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/build ./
 
-# Copy your built React app
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Change ownership of the HTML directory to the new user
-RUN chown -R appuser:www /usr/share/nginx/html
-
-# Switch to the non-root user
 USER appuser
-
 EXPOSE 80
-ENTRYPOINT ["nginx"]
-CMD ["-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
