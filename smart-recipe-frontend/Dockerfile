@@ -1,7 +1,6 @@
 # Stage 1: Build React app
 FROM node:20-alpine AS build
 WORKDIR /app
-ARG REACT_APP_API_BASE
 COPY package*.json ./
 RUN npm ci
 COPY . .
@@ -21,6 +20,5 @@ RUN addgroup -S www && adduser -D -G www appuser && \
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/build ./
 
-USER appuser
 EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

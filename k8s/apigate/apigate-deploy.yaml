@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: backend-apigate
-        image: akshat1414/apigate:v4
+        image: akshat1414/apigate:v5
         ports:
         - containerPort: 8080
