@@ -8,6 +8,6 @@ AWS_REGION=us-east-1
 
 then run this command,
 ```
-kubectl create secret generic aws-secret --from-env-file=../../.env
+kubectl create secret generic aws-secrets --from-env-file=../../.env
 
 ```
