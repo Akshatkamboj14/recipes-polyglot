@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: userdata-allow-api-gate
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: backend-userdata
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend-apigate
+    ports:
+    - protocol: TCP
+      port: 8081   # assuming pod port for user-data service
+

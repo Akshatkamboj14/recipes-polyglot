@@ -19,6 +19,13 @@ spec:
         image: akshat1414/suggest:v2
         ports:
         - containerPort: 8083
+        resources:
+          requests:
+            cpu: "150m"
+            memory: "150Mi"
+          limits:
+            cpu: "400m"
+            memory: "300Mi"
         env:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
@@ -35,3 +42,4 @@ spec:
             secretKeyRef:
               name: aws-secrets
               key: AWS_REGION
+
