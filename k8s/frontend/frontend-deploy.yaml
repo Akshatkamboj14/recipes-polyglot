@@ -16,6 +16,14 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: akshat1414/smart-recipe-frontend:v4
+        image: akshat1414/smart-recipe-frontend:v6
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "50Mi"
+          limits:
+            cpu: "200m"
+            memory: "100Mi"
+

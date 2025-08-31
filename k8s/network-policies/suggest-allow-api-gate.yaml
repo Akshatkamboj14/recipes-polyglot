@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: suggest-allow-api-gate
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: backend-suggest
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend-apigate
+    ports:
+    - protocol: TCP
+      port: 8083   # pod port for suggest service
+
