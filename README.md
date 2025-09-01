@@ -11,3 +11,24 @@ then run this command,
 kubectl create secret generic aws-secrets --from-env-file=../../.env
 
 ```
+------------------------------------------------------------------------------------------------------------------------------
+
+For Ingress, we nned to first apply this file,
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.9.0/deploy/static/provider/baremetal/deploy.yaml
+```
+then apply,
+```
+kubectl apply -f ingress-nodeport.yaml
+```
+
+then apply,
+```
+kubectl apply -f ingress.yaml
+```
+------------------------------------------------------------------------------------------------------------------------------
+for metrcis server
+```
+kubectl apply -f metrics.yaml
+```
