@@ -1,48 +1,53 @@
 #!/bin/bash
 set -e
 
-echo "=== Step 0: Setting working directory ==="
-cd "$(dirname "$0")"
+echo "🚀 Starting Kubernetes setup..."
 
-echo "=== Step 1: Deploy Metrics Server ==="
-# Download metrics-server YAML
-METRICS_URL="https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-curl -Lo metrics-server.yaml $METRICS_URL
-kubectl apply -f metrics-server.yaml
+# 1. DB
+echo "📦 Applying DB manifests..."
+kubectl apply -f ./db
+sleep 5
+# 2. Userdata
+echo "👤 Applying Userdata manifests..."
+kubectl apply -f ./userdata
+sleep 5
+# 3. Secrets
+echo "🔑 Creating secrets..."
+if [ -f "../.env" ]; then
+  kubectl create secret generic aws-secrets --from-env-file=../.env
+else
+  echo "⚠️  .env file not found! Skipping secrets..."
+fi
+sleep 5
+# 4. Suggest
+echo "💡 Applying Suggest manifests..."
+kubectl apply -f ./suggest
+# extra api-gate
+sleep 5
+kubectl apply -f ./apigate
+sleep 5
+# 5. Frontend
+echo "🌐 Applying Frontend manifests..."
+kubectl apply -f ./frontend
+sleep 5
+# 6. HPA
+echo "📊 Applying Metrics + HPA..."
+kubectl apply -f ./hpa/metrics.yaml
+sleep 15
+kubectl apply -f ./hpa/hpa.yaml
+sleep 15
 
-echo "Waiting for metrics-server to be ready..."
-kubectl wait --for=condition=available --timeout=120s deployment metrics-server -n kube-system
+# 7. Ingress
+echo "🌍 Setting up Ingress..."
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.9.0/deploy/static/provider/baremetal/deploy.yaml
+sleep 15
+kubectl apply -f ./ingress/ingress-nodeport.yaml
+sleep 15
+kubectl apply -f ./ingress/ingress.yaml
+sleep 5
+# 8. Network Policies
+echo "🔒 Applying Network Policies..."
+kubectl apply -f ./network-policies
 
-echo "=== Step 2: Deploy Ingress Controller ==="
-# Download ingress-nginx YAML
-INGRESS_URL="https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.0/deploy/static/provider/cloud/deploy.yaml"
-curl -Lo ingress-nginx.yaml $INGRESS_URL
-kubectl apply -f ingress-nginx.yaml
-
-echo "Waiting for ingress controller to be ready..."
-kubectl wait --for=condition=available --timeout=180s deployment ingress-nginx-controller -n ingress-nginx
-
-echo "=== Step 3: Deploy Database ==="
-kubectl apply -f db/
-
-echo "=== Step 4: Deploy Backend Services ==="
-kubectl apply -f apigate/
-kubectl apply -f suggest/
-kubectl apply -f userdata/
-
-echo "=== Step 5: Deploy Frontend ==="
-kubectl apply -f frontend/
-
-echo "=== Step 6: Deploy Application Ingress ==="
-kubectl apply -f ingress/ingress.yaml
-
-echo "=== Step 7: Apply Network Policies ==="
-kubectl apply -f network-policies/
-
-echo "=== Step 8: Apply Horizontal Pod Autoscalers ==="
-kubectl apply -f hpa/
-
-echo "=== All resources deployed successfully! ==="
-kubectl get all
-kubectl get hpa
+echo "✅ All manifests applied successfully!"
 
