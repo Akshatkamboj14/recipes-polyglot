@@ -32,3 +32,7 @@ for metrcis server
 ```
 kubectl apply -f metrics.yaml
 ```
+
+------------------------------------------------------------------------------------------------------------------------------
+now we run entire cluster with a script.
+k8s -> setup.sh : this will apply everything.
