@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: suggest-net-pol
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: backend-suggest
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend-apigate
+    ports:
+    - protocol: TCP
+      port: 8083   # pod port for suggest service
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0   # Allow outbound internet (AWS Bedrock)
+    ports:
+    - protocol: TCP
+      port: 443
+
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
