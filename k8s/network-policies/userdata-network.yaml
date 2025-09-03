@@ -17,7 +17,7 @@ spec:
           app: backend-apigate
     ports:
     - protocol: TCP
-      port: 8081   # assuming pod port for user-data service
+      port: 8081  
 
   egress:
   - to:
