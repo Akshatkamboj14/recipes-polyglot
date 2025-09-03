@@ -30,7 +30,7 @@ kubectl delete -f ./suggest --ignore-not-found
 echo "🔑 Deleting Secrets..."
 kubectl delete secret aws-secrets --ignore-not-found
 
-kubectl delete -f ./apigate
+kubectl delete -f ./apigate --ignore-not-found
 
 
 # 7. Userdata

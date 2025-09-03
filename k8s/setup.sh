@@ -3,6 +3,25 @@ set -e
 
 echo "🚀 Starting Kubernetes setup..."
 
+# 3. Secrets
+echo "🔑 Creating secrets..."
+if [ -f "../.env" ]; then
+  kubectl create secret generic aws-secrets --from-env-file=../.env
+else
+  echo "⚠️  .env file not found!"
+  exit 1
+fi
+sleep 5
+
+
+
+
+
+
+
+
+
+
 # 1. DB
 echo "📦 Applying DB manifests..."
 kubectl apply -f ./db
@@ -11,14 +30,10 @@ sleep 5
 echo "👤 Applying Userdata manifests..."
 kubectl apply -f ./userdata
 sleep 5
-# 3. Secrets
-echo "🔑 Creating secrets..."
-if [ -f "../.env" ]; then
-  kubectl create secret generic aws-secrets --from-env-file=../.env
-else
-  echo "⚠️  .env file not found! Skipping secrets..."
-fi
-sleep 5
+
+
+
+
 # 4. Suggest
 echo "💡 Applying Suggest manifests..."
 kubectl apply -f ./suggest
@@ -44,7 +59,7 @@ sleep 15
 kubectl apply -f ./ingress/ingress-nodeport.yaml
 sleep 15
 kubectl apply -f ./ingress/ingress.yaml
-sleep 5
+sleep 20
 # 8. Network Policies
 echo "🔒 Applying Network Policies..."
 kubectl apply -f ./network-policies
