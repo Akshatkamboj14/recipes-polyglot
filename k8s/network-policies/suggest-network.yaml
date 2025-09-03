@@ -17,11 +17,11 @@ spec:
           app: backend-apigate
     ports:
     - protocol: TCP
-      port: 8083   # pod port for suggest service
+      port: 8083 
   egress:
   - to:
     - ipBlock:
-        cidr: 0.0.0.0/0   # Allow outbound internet (AWS Bedrock)
+        cidr: 0.0.0.0/0  
     ports:
     - protocol: TCP
       port: 443
