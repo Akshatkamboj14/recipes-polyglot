@@ -26,7 +26,7 @@ spec:
     ports:
     - protocol: TCP
       port: 8081
-
+  - to:
     - podSelector:
         matchLabels:
           app: backend-suggest
