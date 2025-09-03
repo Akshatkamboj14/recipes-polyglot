@@ -16,5 +16,5 @@ spec:
           app: backend-userdata
     ports:
     - protocol: TCP
-      port: 5432   # Postgres default port
+      port: 5432  
 
