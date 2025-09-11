@@ -1,0 +1,9 @@
+Flask
+Flask-CORS
+gunicorn
+langchain
+langchain-community
+langchain-aws
+boto3
+requests
+python-dotenv
